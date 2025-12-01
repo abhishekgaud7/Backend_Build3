@@ -15,7 +15,7 @@ export const RegisterRequestSchema = RegisterSchema.refine(
   {
     message: "Passwords do not match",
     path: ["confirmPassword"],
-  }
+  },
 ).omit({ confirmPassword: true });
 
 export const LoginSchema = z.object({
@@ -26,7 +26,10 @@ export const LoginSchema = z.object({
 // Profile Schemas
 export const UpdateProfileSchema = z.object({
   name: z.string().min(1, "Name is required").optional(),
-  phone: z.string().regex(/^\d{10}$/, "Phone must be 10 digits").optional(),
+  phone: z
+    .string()
+    .regex(/^\d{10}$/, "Phone must be 10 digits")
+    .optional(),
 });
 
 // Category Schemas
@@ -39,14 +42,18 @@ export const CategorySchema = z.object({
 export const CreateProductSchema = z.object({
   name: z.string().min(1, "Product name is required"),
   description: z.string().min(1, "Description is required"),
-  price: z.string().refine((val) => !isNaN(parseFloat(val)) && parseFloat(val) > 0, {
-    message: "Price must be a positive number",
-  }),
+  price: z
+    .string()
+    .refine((val) => !isNaN(parseFloat(val)) && parseFloat(val) > 0, {
+      message: "Price must be a positive number",
+    }),
   unit: z.string().min(1, "Unit is required"),
   categoryId: z.string().min(1, "Category is required"),
-  stockQuantity: z.string().refine((val) => !isNaN(parseInt(val)) && parseInt(val) >= 0, {
-    message: "Stock quantity must be a non-negative number",
-  }),
+  stockQuantity: z
+    .string()
+    .refine((val) => !isNaN(parseInt(val)) && parseInt(val) >= 0, {
+      message: "Stock quantity must be a non-negative number",
+    }),
 });
 
 export const UpdateProductSchema = CreateProductSchema.partial();
@@ -67,9 +74,11 @@ export const UpdateAddressSchema = CreateAddressSchema.partial();
 // Order Schemas
 export const CreateOrderItemSchema = z.object({
   productId: z.string().min(1, "Product ID is required"),
-  quantity: z.string().refine((val) => !isNaN(parseInt(val)) && parseInt(val) > 0, {
-    message: "Quantity must be a positive number",
-  }),
+  quantity: z
+    .string()
+    .refine((val) => !isNaN(parseInt(val)) && parseInt(val) > 0, {
+      message: "Quantity must be a positive number",
+    }),
 });
 
 export const CreateOrderSchema = z.object({
@@ -97,12 +106,20 @@ export const CreateSupportMessageSchema = z.object({
 
 // Query Schemas
 export const PaginationSchema = z.object({
-  page: z.string().refine((val) => !isNaN(parseInt(val)) && parseInt(val) > 0, {
-    message: "Page must be a positive number",
-  }).optional().default("1"),
-  limit: z.string().refine((val) => !isNaN(parseInt(val)) && parseInt(val) > 0, {
-    message: "Limit must be a positive number",
-  }).optional().default("10"),
+  page: z
+    .string()
+    .refine((val) => !isNaN(parseInt(val)) && parseInt(val) > 0, {
+      message: "Page must be a positive number",
+    })
+    .optional()
+    .default("1"),
+  limit: z
+    .string()
+    .refine((val) => !isNaN(parseInt(val)) && parseInt(val) > 0, {
+      message: "Limit must be a positive number",
+    })
+    .optional()
+    .default("10"),
 });
 
 export const ProductsQuerySchema = PaginationSchema.extend({
@@ -120,6 +137,12 @@ export type CreateAddressRequest = z.infer<typeof CreateAddressSchema>;
 export type UpdateAddressRequest = z.infer<typeof UpdateAddressSchema>;
 export type CreateOrderRequest = z.infer<typeof CreateOrderSchema>;
 export type UpdateOrderStatusRequest = z.infer<typeof UpdateOrderStatusSchema>;
-export type CreateSupportTicketRequest = z.infer<typeof CreateSupportTicketSchema>;
-export type UpdateSupportTicketRequest = z.infer<typeof UpdateSupportTicketSchema>;
-export type CreateSupportMessageRequest = z.infer<typeof CreateSupportMessageSchema>;
+export type CreateSupportTicketRequest = z.infer<
+  typeof CreateSupportTicketSchema
+>;
+export type UpdateSupportTicketRequest = z.infer<
+  typeof UpdateSupportTicketSchema
+>;
+export type CreateSupportMessageRequest = z.infer<
+  typeof CreateSupportMessageSchema
+>;

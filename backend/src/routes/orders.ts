@@ -54,7 +54,7 @@ router.get(
       },
     };
     res.json(response);
-  })
+  }),
 );
 
 // GET /api/orders/:id
@@ -75,7 +75,7 @@ router.get(
       data: order,
     };
     res.json(response);
-  })
+  }),
 );
 
 // POST /api/orders
@@ -107,7 +107,7 @@ router.post(
       data: order,
     };
     res.status(201).json(response);
-  })
+  }),
 );
 
 // PUT /api/orders/:id/status
@@ -127,14 +127,14 @@ router.put(
     const order = await updateOrderStatus(
       req.params.id,
       req.body.status,
-      req.user.role
+      req.user.role,
     );
     const response: ApiResponse = {
       success: true,
       data: order,
     };
     res.json(response);
-  })
+  }),
 );
 
 export default router;

@@ -30,7 +30,7 @@ router.post(
       data: result,
     };
     res.status(201).json(response);
-  })
+  }),
 );
 
 // POST /api/auth/login
@@ -44,7 +44,7 @@ router.post(
       data: result,
     };
     res.json(response);
-  })
+  }),
 );
 
 // POST /api/auth/logout
@@ -56,7 +56,7 @@ router.post(
       data: { message: "Logged out successfully" },
     };
     res.json(response);
-  })
+  }),
 );
 
 // GET /api/auth/me
@@ -77,7 +77,7 @@ router.get(
       data: user,
     };
     res.json(response);
-  })
+  }),
 );
 
 export default router;

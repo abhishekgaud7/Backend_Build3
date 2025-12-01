@@ -23,7 +23,7 @@ interface UpdateProductInput {
 
 export async function createProduct(
   sellerId: string,
-  input: CreateProductInput
+  input: CreateProductInput,
 ): Promise<ProductResponse> {
   // Generate slug from name
   const slug = input.name.toLowerCase().replace(/\s+/g, "-") + `-${Date.now()}`;
@@ -48,7 +48,7 @@ export async function updateProduct(
   productId: string,
   sellerId: string,
   role: string,
-  input: UpdateProductInput
+  input: UpdateProductInput,
 ): Promise<ProductResponse> {
   // Check ownership
   const product = await prisma.product.findUnique({
@@ -83,7 +83,7 @@ export async function updateProduct(
 export async function deleteProduct(
   productId: string,
   sellerId: string,
-  role: string
+  role: string,
 ): Promise<void> {
   const product = await prisma.product.findUnique({
     where: { id: productId },
@@ -119,7 +119,7 @@ export async function getProducts(
   searchTerm?: string,
   categorySlug?: string,
   page: number = 1,
-  limit: number = 10
+  limit: number = 10,
 ): Promise<{ products: ProductResponse[]; total: number }> {
   const skip = (page - 1) * limit;
 
@@ -159,7 +159,7 @@ export async function getProducts(
 export async function getSellerProducts(
   sellerId: string,
   page: number = 1,
-  limit: number = 10
+  limit: number = 10,
 ): Promise<{ products: ProductResponse[]; total: number }> {
   const skip = (page - 1) * limit;
 

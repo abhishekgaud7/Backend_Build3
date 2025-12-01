@@ -6,9 +6,7 @@ interface CreateCategoryInput {
   description?: string;
 }
 
-export async function createCategory(
-  input: CreateCategoryInput
-): Promise<any> {
+export async function createCategory(input: CreateCategoryInput): Promise<any> {
   // Generate slug from name
   const slug = input.name.toLowerCase().replace(/\s+/g, "-");
 
@@ -64,7 +62,10 @@ export async function getCategoryById(id: string): Promise<any> {
   return formatCategory(category);
 }
 
-export async function updateCategory(id: string, input: CreateCategoryInput): Promise<any> {
+export async function updateCategory(
+  id: string,
+  input: CreateCategoryInput,
+): Promise<any> {
   const category = await prisma.category.findUnique({
     where: { id },
   });

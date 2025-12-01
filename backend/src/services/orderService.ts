@@ -1,5 +1,9 @@
 import { prisma } from "@/lib/prisma.js";
-import { NotFoundError, AuthorizationError, ValidationError } from "@/utils/errors.js";
+import {
+  NotFoundError,
+  AuthorizationError,
+  ValidationError,
+} from "@/utils/errors.js";
 import type { OrderResponse, OrderItemResponse } from "@/types/index.js";
 
 interface OrderItemInput {
@@ -17,7 +21,7 @@ const DELIVERY_FEE = 50; // Fixed delivery fee
 
 export async function createOrder(
   userId: string,
-  input: CreateOrderInput
+  input: CreateOrderInput,
 ): Promise<OrderResponse> {
   // Verify address belongs to user
   const address = await prisma.address.findUnique({
@@ -92,7 +96,7 @@ export async function createOrder(
 export async function getOrder(
   orderId: string,
   userId: string,
-  role: string
+  role: string,
 ): Promise<OrderResponse> {
   const order = await prisma.order.findUnique({
     where: { id: orderId },
@@ -114,7 +118,7 @@ export async function getOrder(
 export async function getUserOrders(
   userId: string,
   page: number = 1,
-  limit: number = 10
+  limit: number = 10,
 ): Promise<{ orders: OrderResponse[]; total: number }> {
   const skip = (page - 1) * limit;
 
@@ -137,7 +141,7 @@ export async function getUserOrders(
 
 export async function getAllOrders(
   page: number = 1,
-  limit: number = 10
+  limit: number = 10,
 ): Promise<{ orders: OrderResponse[]; total: number }> {
   const skip = (page - 1) * limit;
 
@@ -160,7 +164,7 @@ export async function getAllOrders(
 export async function updateOrderStatus(
   orderId: string,
   newStatus: string,
-  role: string
+  role: string,
 ): Promise<OrderResponse> {
   const order = await prisma.order.findUnique({
     where: { id: orderId },
@@ -173,7 +177,9 @@ export async function updateOrderStatus(
 
   // Only admin and sellers can update status
   if (role !== "ADMIN" && role !== "SELLER") {
-    throw new AuthorizationError("Only admin and sellers can update order status");
+    throw new AuthorizationError(
+      "Only admin and sellers can update order status",
+    );
   }
 
   const updated = await prisma.order.update({

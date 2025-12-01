@@ -1,9 +1,5 @@
 import { prisma } from "@/lib/prisma.js";
-import {
-  hashPassword,
-  verifyPassword,
-  generateToken,
-} from "@/utils/auth.js";
+import { hashPassword, verifyPassword, generateToken } from "@/utils/auth.js";
 import {
   AuthenticationError,
   ConflictError,
@@ -29,7 +25,9 @@ interface AuthResponse {
   accessToken: string;
 }
 
-export async function registerUser(input: RegisterInput): Promise<AuthResponse> {
+export async function registerUser(
+  input: RegisterInput,
+): Promise<AuthResponse> {
   // Check if user already exists
   const existingUser = await prisma.user.findUnique({
     where: { email: input.email },
@@ -75,7 +73,7 @@ export async function loginUser(input: LoginInput): Promise<AuthResponse> {
   // Verify password
   const isPasswordValid = await verifyPassword(
     input.password,
-    user.passwordHash
+    user.passwordHash,
   );
 
   if (!isPasswordValid) {
@@ -105,7 +103,7 @@ export async function getCurrentUser(userId: string): Promise<UserProfile> {
 
 export async function updateUserProfile(
   userId: string,
-  input: { name?: string; phone?: string }
+  input: { name?: string; phone?: string },
 ): Promise<UserProfile> {
   const user = await prisma.user.update({
     where: { id: userId },

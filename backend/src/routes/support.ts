@@ -56,7 +56,7 @@ router.get(
       },
     };
     res.json(response);
-  })
+  }),
 );
 
 // GET /api/support/:id
@@ -77,7 +77,7 @@ router.get(
       data: ticket,
     };
     res.json(response);
-  })
+  }),
 );
 
 // POST /api/support
@@ -99,7 +99,7 @@ router.post(
       data: ticket,
     };
     res.status(201).json(response);
-  })
+  }),
 );
 
 // POST /api/support/:id/messages
@@ -119,14 +119,14 @@ router.post(
       req.params.id,
       req.user.id,
       req.user.role,
-      req.body
+      req.body,
     );
     const response: ApiResponse = {
       success: true,
       data: message,
     };
     res.status(201).json(response);
-  })
+  }),
 );
 
 // PUT /api/support/:id/status
@@ -146,14 +146,14 @@ router.put(
     const ticket = await updateTicketStatus(
       req.params.id,
       req.body.status,
-      req.user.role
+      req.user.role,
     );
     const response: ApiResponse = {
       success: true,
       data: ticket,
     };
     res.json(response);
-  })
+  }),
 );
 
 export default router;

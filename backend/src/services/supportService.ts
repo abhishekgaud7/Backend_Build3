@@ -1,6 +1,9 @@
 import { prisma } from "@/lib/prisma.js";
 import { NotFoundError, AuthorizationError } from "@/utils/errors.js";
-import type { SupportTicketResponse, SupportMessageResponse } from "@/types/index.js";
+import type {
+  SupportTicketResponse,
+  SupportMessageResponse,
+} from "@/types/index.js";
 
 interface CreateTicketInput {
   subject: string;
@@ -13,7 +16,7 @@ interface CreateMessageInput {
 
 export async function createTicket(
   userId: string,
-  input: CreateTicketInput
+  input: CreateTicketInput,
 ): Promise<SupportTicketResponse> {
   const ticket = await prisma.supportTicket.create({
     data: {
@@ -30,7 +33,7 @@ export async function createTicket(
 export async function getTicket(
   ticketId: string,
   userId: string,
-  role: string
+  role: string,
 ): Promise<SupportTicketResponse> {
   const ticket = await prisma.supportTicket.findUnique({
     where: { id: ticketId },
@@ -52,7 +55,7 @@ export async function getTicket(
 export async function getUserTickets(
   userId: string,
   page: number = 1,
-  limit: number = 10
+  limit: number = 10,
 ): Promise<{ tickets: SupportTicketResponse[]; total: number }> {
   const skip = (page - 1) * limit;
 
@@ -75,7 +78,7 @@ export async function getUserTickets(
 
 export async function getAllTickets(
   page: number = 1,
-  limit: number = 10
+  limit: number = 10,
 ): Promise<{ tickets: SupportTicketResponse[]; total: number }> {
   const skip = (page - 1) * limit;
 
@@ -98,7 +101,7 @@ export async function getAllTickets(
 export async function updateTicketStatus(
   ticketId: string,
   newStatus: string,
-  role: string
+  role: string,
 ): Promise<SupportTicketResponse> {
   if (role !== "ADMIN") {
     throw new AuthorizationError("Only admins can update ticket status");
@@ -126,7 +129,7 @@ export async function addMessage(
   ticketId: string,
   userId: string,
   role: string,
-  input: CreateMessageInput
+  input: CreateMessageInput,
 ): Promise<SupportMessageResponse> {
   const ticket = await prisma.supportTicket.findUnique({
     where: { id: ticketId },
@@ -139,7 +142,7 @@ export async function addMessage(
   // Check authorization
   if (role !== "ADMIN" && ticket.userId !== userId) {
     throw new AuthorizationError(
-      "You can only add messages to your own tickets"
+      "You can only add messages to your own tickets",
     );
   }
 
@@ -157,7 +160,7 @@ export async function addMessage(
 }
 
 export async function getTicketMessages(
-  ticketId: string
+  ticketId: string,
 ): Promise<SupportMessageResponse[]> {
   const messages = await prisma.supportMessage.findMany({
     where: { ticketId },

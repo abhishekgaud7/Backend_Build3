@@ -35,7 +35,7 @@ router.get(
       search,
       categorySlug,
       page,
-      limit
+      limit,
     );
 
     const response: PaginatedResponse = {
@@ -49,7 +49,7 @@ router.get(
       },
     };
     res.json(response);
-  })
+  }),
 );
 
 // GET /api/products/:id
@@ -62,7 +62,7 @@ router.get(
       data: product,
     };
     res.json(response);
-  })
+  }),
 );
 
 // POST /api/products
@@ -85,7 +85,7 @@ router.post(
       data: product,
     };
     res.status(201).json(response);
-  })
+  }),
 );
 
 // PUT /api/products/:id
@@ -106,14 +106,14 @@ router.put(
       req.params.id,
       req.user.id,
       req.user.role,
-      req.body
+      req.body,
     );
     const response: ApiResponse = {
       success: true,
       data: product,
     };
     res.json(response);
-  })
+  }),
 );
 
 // DELETE /api/products/:id
@@ -135,7 +135,7 @@ router.delete(
       data: { message: "Product deleted successfully" },
     };
     res.json(response);
-  })
+  }),
 );
 
 export default router;

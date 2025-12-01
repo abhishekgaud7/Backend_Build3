@@ -21,26 +21,27 @@ Complete guide for implementing all API integrations, custom hooks, dashboards, 
 
 ```typescript
 // Base configuration
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:3001/api";
 
 // Store token in localStorage
-const getToken = () => localStorage.getItem('accessToken');
-const setToken = (token: string) => localStorage.setItem('accessToken', token);
-const clearToken = () => localStorage.removeItem('accessToken');
+const getToken = () => localStorage.getItem("accessToken");
+const setToken = (token: string) => localStorage.setItem("accessToken", token);
+const clearToken = () => localStorage.removeItem("accessToken");
 
 // Fetch wrapper with auth
 export async function apiFetch(
   endpoint: string,
-  options: RequestInit = {}
+  options: RequestInit = {},
 ): Promise<any> {
   const headers: HeadersInit = {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
     ...options.headers,
   };
 
   const token = getToken();
   if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
+    headers["Authorization"] = `Bearer ${token}`;
   }
 
   const response = await fetch(`${API_BASE_URL}${endpoint}`, {
@@ -50,7 +51,7 @@ export async function apiFetch(
 
   if (!response.ok) {
     const error = await response.json();
-    throw new Error(error.error?.message || 'API Error');
+    throw new Error(error.error?.message || "API Error");
   }
 
   return response.json();
@@ -62,68 +63,73 @@ export const authApi = {
     name: string;
     email: string;
     phone: string;
-    role: 'BUYER' | 'SELLER';
+    role: "BUYER" | "SELLER";
     password: string;
     confirmPassword: string;
-  }) => apiFetch('/auth/register', {
-    method: 'POST',
-    body: JSON.stringify(data),
-  }),
+  }) =>
+    apiFetch("/auth/register", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
 
   login: (email: string, password: string) =>
-    apiFetch('/auth/login', {
-      method: 'POST',
+    apiFetch("/auth/login", {
+      method: "POST",
       body: JSON.stringify({ email, password }),
     }),
 
-  logout: () => apiFetch('/auth/logout', { method: 'POST' }),
+  logout: () => apiFetch("/auth/logout", { method: "POST" }),
 
-  getCurrentUser: () => apiFetch('/auth/me'),
+  getCurrentUser: () => apiFetch("/auth/me"),
 };
 
 // Products endpoints
 export const productsApi = {
   getAll: (search?: string, categorySlug?: string, page = 1, limit = 10) => {
     const params = new URLSearchParams();
-    if (search) params.append('search', search);
-    if (categorySlug) params.append('categorySlug', categorySlug);
-    params.append('page', String(page));
-    params.append('limit', String(limit));
+    if (search) params.append("search", search);
+    if (categorySlug) params.append("categorySlug", categorySlug);
+    params.append("page", String(page));
+    params.append("limit", String(limit));
     return apiFetch(`/products?${params.toString()}`);
   },
 
   getById: (id: string) => apiFetch(`/products/${id}`),
 
-  create: (data: any) => apiFetch('/products', {
-    method: 'POST',
-    body: JSON.stringify(data),
-  }),
+  create: (data: any) =>
+    apiFetch("/products", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
 
-  update: (id: string, data: any) => apiFetch(`/products/${id}`, {
-    method: 'PUT',
-    body: JSON.stringify(data),
-  }),
+  update: (id: string, data: any) =>
+    apiFetch(`/products/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(data),
+    }),
 
-  delete: (id: string) => apiFetch(`/products/${id}`, { method: 'DELETE' }),
+  delete: (id: string) => apiFetch(`/products/${id}`, { method: "DELETE" }),
 };
 
 // Categories endpoints
 export const categoriesApi = {
-  getAll: () => apiFetch('/categories'),
+  getAll: () => apiFetch("/categories"),
 
   getBySlug: (slug: string) => apiFetch(`/categories/${slug}`),
 
-  create: (data: any) => apiFetch('/categories', {
-    method: 'POST',
-    body: JSON.stringify(data),
-  }),
+  create: (data: any) =>
+    apiFetch("/categories", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
 
-  update: (id: string, data: any) => apiFetch(`/categories/${id}`, {
-    method: 'PUT',
-    body: JSON.stringify(data),
-  }),
+  update: (id: string, data: any) =>
+    apiFetch(`/categories/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(data),
+    }),
 
-  delete: (id: string) => apiFetch(`/categories/${id}`, { method: 'DELETE' }),
+  delete: (id: string) => apiFetch(`/categories/${id}`, { method: "DELETE" }),
 };
 
 // Orders endpoints
@@ -134,35 +140,37 @@ export const ordersApi = {
   getById: (id: string) => apiFetch(`/orders/${id}`),
 
   create: (items: any[], addressId: string) =>
-    apiFetch('/orders', {
-      method: 'POST',
+    apiFetch("/orders", {
+      method: "POST",
       body: JSON.stringify({ items, addressId }),
     }),
 
   updateStatus: (id: string, status: string) =>
     apiFetch(`/orders/${id}/status`, {
-      method: 'PUT',
+      method: "PUT",
       body: JSON.stringify({ status }),
     }),
 };
 
 // Addresses endpoints
 export const addressesApi = {
-  getAll: () => apiFetch('/addresses'),
+  getAll: () => apiFetch("/addresses"),
 
   getById: (id: string) => apiFetch(`/addresses/${id}`),
 
-  create: (data: any) => apiFetch('/addresses', {
-    method: 'POST',
-    body: JSON.stringify(data),
-  }),
+  create: (data: any) =>
+    apiFetch("/addresses", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
 
-  update: (id: string, data: any) => apiFetch(`/addresses/${id}`, {
-    method: 'PUT',
-    body: JSON.stringify(data),
-  }),
+  update: (id: string, data: any) =>
+    apiFetch(`/addresses/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(data),
+    }),
 
-  delete: (id: string) => apiFetch(`/addresses/${id}`, { method: 'DELETE' }),
+  delete: (id: string) => apiFetch(`/addresses/${id}`, { method: "DELETE" }),
 };
 
 // Support tickets endpoints
@@ -173,20 +181,20 @@ export const supportApi = {
   getById: (id: string) => apiFetch(`/support/${id}`),
 
   create: (subject: string, description: string) =>
-    apiFetch('/support', {
-      method: 'POST',
+    apiFetch("/support", {
+      method: "POST",
       body: JSON.stringify({ subject, description }),
     }),
 
   addMessage: (ticketId: string, message: string) =>
     apiFetch(`/support/${ticketId}/messages`, {
-      method: 'POST',
+      method: "POST",
       body: JSON.stringify({ message }),
     }),
 
   updateStatus: (id: string, status: string) =>
     apiFetch(`/support/${id}/status`, {
-      method: 'PUT',
+      method: "PUT",
       body: JSON.stringify({ status }),
     }),
 };
@@ -201,16 +209,16 @@ export { getToken, setToken, clearToken };
 ### 1. Create `client/hooks/useAuth.ts` - Authentication Hook
 
 ```typescript
-import { useState, useCallback, useEffect } from 'react';
-import { authApi, setToken, getToken, clearToken } from '@/lib/api';
-import { toast } from 'sonner';
+import { useState, useCallback, useEffect } from "react";
+import { authApi, setToken, getToken, clearToken } from "@/lib/api";
+import { toast } from "sonner";
 
 interface User {
   id: string;
   name: string;
   email: string;
   phone: string | null;
-  role: 'BUYER' | 'SELLER' | 'ADMIN';
+  role: "BUYER" | "SELLER" | "ADMIN";
   createdAt: string;
 }
 
@@ -243,10 +251,11 @@ export function useAuth() {
       const response = await authApi.register(data);
       setToken(response.data.accessToken);
       setUser(response.data.user);
-      toast.success('Registration successful!');
+      toast.success("Registration successful!");
       return response.data;
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Registration failed';
+      const message =
+        err instanceof Error ? err.message : "Registration failed";
       setError(message);
       toast.error(message);
       throw err;
@@ -262,10 +271,10 @@ export function useAuth() {
       const response = await authApi.login(email, password);
       setToken(response.data.accessToken);
       setUser(response.data.user);
-      toast.success('Login successful!');
+      toast.success("Login successful!");
       return response.data;
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Login failed';
+      const message = err instanceof Error ? err.message : "Login failed";
       setError(message);
       toast.error(message);
       throw err;
@@ -279,15 +288,15 @@ export function useAuth() {
       await authApi.logout();
       clearToken();
       setUser(null);
-      toast.success('Logged out successfully');
+      toast.success("Logged out successfully");
     } catch (err) {
-      console.error('Logout error:', err);
+      console.error("Logout error:", err);
     }
   }, []);
 
   const isAuthenticated = !!user;
-  const isSeller = user?.role === 'SELLER' || user?.role === 'ADMIN';
-  const isAdmin = user?.role === 'ADMIN';
+  const isSeller = user?.role === "SELLER" || user?.role === "ADMIN";
+  const isAdmin = user?.role === "ADMIN";
 
   return {
     user,
@@ -306,9 +315,9 @@ export function useAuth() {
 ### 2. Create `client/hooks/useProducts.ts` - Products Hook
 
 ```typescript
-import { useState, useCallback, useEffect } from 'react';
-import { productsApi } from '@/lib/api';
-import { toast } from 'sonner';
+import { useState, useCallback, useEffect } from "react";
+import { productsApi } from "@/lib/api";
+import { toast } from "sonner";
 
 export function useProducts() {
   const [products, setProducts] = useState<any[]>([]);
@@ -329,14 +338,15 @@ export function useProducts() {
         setProducts(response.data);
         setPagination(response.pagination);
       } catch (err) {
-        const message = err instanceof Error ? err.message : 'Failed to fetch products';
+        const message =
+          err instanceof Error ? err.message : "Failed to fetch products";
         setError(message);
         toast.error(message);
       } finally {
         setLoading(false);
       }
     },
-    []
+    [],
   );
 
   useEffect(() => {
@@ -348,49 +358,62 @@ export function useProducts() {
       const response = await productsApi.getById(id);
       return response.data;
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Failed to fetch product';
+      const message =
+        err instanceof Error ? err.message : "Failed to fetch product";
       toast.error(message);
       throw err;
     }
   }, []);
 
-  const createProduct = useCallback(async (data: any) => {
-    try {
-      const response = await productsApi.create(data);
-      toast.success('Product created successfully!');
-      await fetchProducts();
-      return response.data;
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'Failed to create product';
-      toast.error(message);
-      throw err;
-    }
-  }, [fetchProducts]);
+  const createProduct = useCallback(
+    async (data: any) => {
+      try {
+        const response = await productsApi.create(data);
+        toast.success("Product created successfully!");
+        await fetchProducts();
+        return response.data;
+      } catch (err) {
+        const message =
+          err instanceof Error ? err.message : "Failed to create product";
+        toast.error(message);
+        throw err;
+      }
+    },
+    [fetchProducts],
+  );
 
-  const updateProduct = useCallback(async (id: string, data: any) => {
-    try {
-      const response = await productsApi.update(id, data);
-      toast.success('Product updated successfully!');
-      await fetchProducts();
-      return response.data;
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'Failed to update product';
-      toast.error(message);
-      throw err;
-    }
-  }, [fetchProducts]);
+  const updateProduct = useCallback(
+    async (id: string, data: any) => {
+      try {
+        const response = await productsApi.update(id, data);
+        toast.success("Product updated successfully!");
+        await fetchProducts();
+        return response.data;
+      } catch (err) {
+        const message =
+          err instanceof Error ? err.message : "Failed to update product";
+        toast.error(message);
+        throw err;
+      }
+    },
+    [fetchProducts],
+  );
 
-  const deleteProduct = useCallback(async (id: string) => {
-    try {
-      await productsApi.delete(id);
-      toast.success('Product deleted successfully!');
-      await fetchProducts();
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'Failed to delete product';
-      toast.error(message);
-      throw err;
-    }
-  }, [fetchProducts]);
+  const deleteProduct = useCallback(
+    async (id: string) => {
+      try {
+        await productsApi.delete(id);
+        toast.success("Product deleted successfully!");
+        await fetchProducts();
+      } catch (err) {
+        const message =
+          err instanceof Error ? err.message : "Failed to delete product";
+        toast.error(message);
+        throw err;
+      }
+    },
+    [fetchProducts],
+  );
 
   return {
     products,
@@ -409,9 +432,9 @@ export function useProducts() {
 ### 3. Create `client/hooks/useOrders.ts` - Orders Hook
 
 ```typescript
-import { useState, useCallback, useEffect } from 'react';
-import { ordersApi } from '@/lib/api';
-import { toast } from 'sonner';
+import { useState, useCallback, useEffect } from "react";
+import { ordersApi } from "@/lib/api";
+import { toast } from "sonner";
 
 export function useOrders() {
   const [orders, setOrders] = useState<any[]>([]);
@@ -431,7 +454,8 @@ export function useOrders() {
       setOrders(response.data);
       setPagination(response.pagination);
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Failed to fetch orders';
+      const message =
+        err instanceof Error ? err.message : "Failed to fetch orders";
       setError(message);
       toast.error(message);
     } finally {
@@ -448,37 +472,46 @@ export function useOrders() {
       const response = await ordersApi.getById(id);
       return response.data;
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Failed to fetch order';
+      const message =
+        err instanceof Error ? err.message : "Failed to fetch order";
       toast.error(message);
       throw err;
     }
   }, []);
 
-  const createOrder = useCallback(async (items: any[], addressId: string) => {
-    try {
-      const response = await ordersApi.create(items, addressId);
-      toast.success('Order placed successfully!');
-      await fetchOrders();
-      return response.data;
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'Failed to create order';
-      toast.error(message);
-      throw err;
-    }
-  }, [fetchOrders]);
+  const createOrder = useCallback(
+    async (items: any[], addressId: string) => {
+      try {
+        const response = await ordersApi.create(items, addressId);
+        toast.success("Order placed successfully!");
+        await fetchOrders();
+        return response.data;
+      } catch (err) {
+        const message =
+          err instanceof Error ? err.message : "Failed to create order";
+        toast.error(message);
+        throw err;
+      }
+    },
+    [fetchOrders],
+  );
 
-  const updateOrderStatus = useCallback(async (id: string, status: string) => {
-    try {
-      const response = await ordersApi.updateStatus(id, status);
-      toast.success('Order status updated!');
-      await fetchOrders();
-      return response.data;
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'Failed to update order';
-      toast.error(message);
-      throw err;
-    }
-  }, [fetchOrders]);
+  const updateOrderStatus = useCallback(
+    async (id: string, status: string) => {
+      try {
+        const response = await ordersApi.updateStatus(id, status);
+        toast.success("Order status updated!");
+        await fetchOrders();
+        return response.data;
+      } catch (err) {
+        const message =
+          err instanceof Error ? err.message : "Failed to update order";
+        toast.error(message);
+        throw err;
+      }
+    },
+    [fetchOrders],
+  );
 
   return {
     orders,
@@ -496,9 +529,9 @@ export function useOrders() {
 ### 4. Create `client/hooks/useAddresses.ts` - Addresses Hook
 
 ```typescript
-import { useState, useCallback, useEffect } from 'react';
-import { addressesApi } from '@/lib/api';
-import { toast } from 'sonner';
+import { useState, useCallback, useEffect } from "react";
+import { addressesApi } from "@/lib/api";
+import { toast } from "sonner";
 
 export function useAddresses() {
   const [addresses, setAddresses] = useState<any[]>([]);
@@ -511,7 +544,8 @@ export function useAddresses() {
       const response = await addressesApi.getAll();
       setAddresses(response.data);
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Failed to fetch addresses';
+      const message =
+        err instanceof Error ? err.message : "Failed to fetch addresses";
       setError(message);
       toast.error(message);
     } finally {
@@ -523,43 +557,55 @@ export function useAddresses() {
     fetchAddresses();
   }, [fetchAddresses]);
 
-  const createAddress = useCallback(async (data: any) => {
-    try {
-      const response = await addressesApi.create(data);
-      toast.success('Address added successfully!');
-      await fetchAddresses();
-      return response.data;
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'Failed to add address';
-      toast.error(message);
-      throw err;
-    }
-  }, [fetchAddresses]);
+  const createAddress = useCallback(
+    async (data: any) => {
+      try {
+        const response = await addressesApi.create(data);
+        toast.success("Address added successfully!");
+        await fetchAddresses();
+        return response.data;
+      } catch (err) {
+        const message =
+          err instanceof Error ? err.message : "Failed to add address";
+        toast.error(message);
+        throw err;
+      }
+    },
+    [fetchAddresses],
+  );
 
-  const updateAddress = useCallback(async (id: string, data: any) => {
-    try {
-      const response = await addressesApi.update(id, data);
-      toast.success('Address updated successfully!');
-      await fetchAddresses();
-      return response.data;
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'Failed to update address';
-      toast.error(message);
-      throw err;
-    }
-  }, [fetchAddresses]);
+  const updateAddress = useCallback(
+    async (id: string, data: any) => {
+      try {
+        const response = await addressesApi.update(id, data);
+        toast.success("Address updated successfully!");
+        await fetchAddresses();
+        return response.data;
+      } catch (err) {
+        const message =
+          err instanceof Error ? err.message : "Failed to update address";
+        toast.error(message);
+        throw err;
+      }
+    },
+    [fetchAddresses],
+  );
 
-  const deleteAddress = useCallback(async (id: string) => {
-    try {
-      await addressesApi.delete(id);
-      toast.success('Address deleted successfully!');
-      await fetchAddresses();
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'Failed to delete address';
-      toast.error(message);
-      throw err;
-    }
-  }, [fetchAddresses]);
+  const deleteAddress = useCallback(
+    async (id: string) => {
+      try {
+        await addressesApi.delete(id);
+        toast.success("Address deleted successfully!");
+        await fetchAddresses();
+      } catch (err) {
+        const message =
+          err instanceof Error ? err.message : "Failed to delete address";
+        toast.error(message);
+        throw err;
+      }
+    },
+    [fetchAddresses],
+  );
 
   return {
     addresses,
@@ -576,9 +622,9 @@ export function useAddresses() {
 ### 5. Create `client/hooks/useCategories.ts` - Categories Hook
 
 ```typescript
-import { useState, useCallback, useEffect } from 'react';
-import { categoriesApi } from '@/lib/api';
-import { toast } from 'sonner';
+import { useState, useCallback, useEffect } from "react";
+import { categoriesApi } from "@/lib/api";
+import { toast } from "sonner";
 
 export function useCategories() {
   const [categories, setCa] = useState<any[]>([]);
@@ -591,7 +637,8 @@ export function useCategories() {
       const response = await categoriesApi.getAll();
       setCategories(response.data);
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Failed to fetch categories';
+      const message =
+        err instanceof Error ? err.message : "Failed to fetch categories";
       setError(message);
       toast.error(message);
     } finally {
@@ -608,7 +655,8 @@ export function useCategories() {
       const response = await categoriesApi.getBySlug(slug);
       return response.data;
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Failed to fetch category';
+      const message =
+        err instanceof Error ? err.message : "Failed to fetch category";
       toast.error(message);
       throw err;
     }

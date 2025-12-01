@@ -10,7 +10,10 @@ export function validateBody(schema: ZodSchema) {
       next();
     } catch (error) {
       if (error instanceof Error) {
-        throw new ValidationError("Invalid request body", JSON.parse(error.message));
+        throw new ValidationError(
+          "Invalid request body",
+          JSON.parse(error.message),
+        );
       }
       throw new ValidationError("Invalid request body");
     }
@@ -25,7 +28,10 @@ export function validateQuery(schema: ZodSchema) {
       next();
     } catch (error) {
       if (error instanceof Error) {
-        throw new ValidationError("Invalid query parameters", JSON.parse(error.message));
+        throw new ValidationError(
+          "Invalid query parameters",
+          JSON.parse(error.message),
+        );
       }
       throw new ValidationError("Invalid query parameters");
     }
@@ -40,7 +46,10 @@ export function validateParams(schema: ZodSchema) {
       next();
     } catch (error) {
       if (error instanceof Error) {
-        throw new ValidationError("Invalid parameters", JSON.parse(error.message));
+        throw new ValidationError(
+          "Invalid parameters",
+          JSON.parse(error.message),
+        );
       }
       throw new ValidationError("Invalid parameters");
     }

@@ -11,7 +11,7 @@ export async function hashPassword(password: string): Promise<string> {
 
 export async function verifyPassword(
   password: string,
-  hash: string
+  hash: string,
 ): Promise<boolean> {
   return bcrypt.compare(password, hash);
 }
@@ -19,7 +19,7 @@ export async function verifyPassword(
 export function generateToken(
   userId: string,
   email: string,
-  role: string
+  role: string,
 ): string {
   return jwt.sign(
     {
@@ -30,7 +30,7 @@ export function generateToken(
     JWT_SECRET,
     {
       expiresIn: JWT_EXPIRY,
-    }
+    },
   );
 }
 

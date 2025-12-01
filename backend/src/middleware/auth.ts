@@ -6,7 +6,7 @@ import type { AuthenticatedRequest } from "@/types/index.js";
 export function authMiddleware(
   req: AuthenticatedRequest,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): void {
   try {
     const token = extractTokenFromHeader(req.headers.authorization);
@@ -38,7 +38,7 @@ export function requireRole(...roles: string[]) {
   return (
     req: AuthenticatedRequest,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): void => {
     if (!req.user) {
       throw new AuthenticationError("User not authenticated");

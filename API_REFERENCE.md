@@ -23,6 +23,7 @@ Token is received after login/register and should be stored in localStorage.
 ## Authentication Endpoints
 
 ### Register
+
 ```
 POST /auth/register
 Content-Type: application/json
@@ -54,6 +55,7 @@ Response: 201
 ```
 
 ### Login
+
 ```
 POST /auth/login
 Content-Type: application/json
@@ -74,6 +76,7 @@ Response: 200
 ```
 
 ### Get Current User
+
 ```
 GET /auth/me
 Authorization: Bearer <token>
@@ -93,6 +96,7 @@ Response: 200
 ```
 
 ### Logout
+
 ```
 POST /auth/logout
 Authorization: Bearer <token>
@@ -111,6 +115,7 @@ Response: 200
 ## Product Endpoints
 
 ### List Products (Public)
+
 ```
 GET /products?search=cement&categorySlug=cement&page=1&limit=10
 
@@ -143,6 +148,7 @@ Response: 200
 ```
 
 ### Get Product Details
+
 ```
 GET /products/:id
 
@@ -154,6 +160,7 @@ Response: 200
 ```
 
 ### Create Product (Seller/Admin)
+
 ```
 POST /products
 Authorization: Bearer <token>
@@ -176,6 +183,7 @@ Response: 201
 ```
 
 ### Update Product (Seller/Admin)
+
 ```
 PUT /products/:id
 Authorization: Bearer <token>
@@ -195,6 +203,7 @@ Response: 200
 ```
 
 ### Delete Product (Seller/Admin)
+
 ```
 DELETE /products/:id
 Authorization: Bearer <token>
@@ -213,6 +222,7 @@ Response: 200
 ## Category Endpoints
 
 ### List Categories (Public)
+
 ```
 GET /categories
 
@@ -233,6 +243,7 @@ Response: 200
 ```
 
 ### Get Category by Slug (Public)
+
 ```
 GET /categories/:slug
 
@@ -244,6 +255,7 @@ Response: 200
 ```
 
 ### Create Category (Admin)
+
 ```
 POST /categories
 Authorization: Bearer <token>
@@ -262,6 +274,7 @@ Response: 201
 ```
 
 ### Update Category (Admin)
+
 ```
 PUT /categories/:id
 Authorization: Bearer <token>
@@ -280,6 +293,7 @@ Response: 200
 ```
 
 ### Delete Category (Admin)
+
 ```
 DELETE /categories/:id
 Authorization: Bearer <token>
@@ -298,6 +312,7 @@ Response: 200
 ## Order Endpoints
 
 ### List Orders
+
 ```
 GET /orders?page=1&limit=10
 Authorization: Bearer <token>
@@ -333,6 +348,7 @@ Response: 200
 ```
 
 ### Get Order Details
+
 ```
 GET /orders/:id
 Authorization: Bearer <token>
@@ -345,6 +361,7 @@ Response: 200
 ```
 
 ### Create Order
+
 ```
 POST /orders
 Authorization: Bearer <token>
@@ -372,6 +389,7 @@ Response: 201
 ```
 
 ### Update Order Status (Seller/Admin)
+
 ```
 PUT /orders/:id/status
 Authorization: Bearer <token>
@@ -395,6 +413,7 @@ Response: 200
 ## Address Endpoints
 
 ### List User Addresses
+
 ```
 GET /addresses
 Authorization: Bearer <token>
@@ -420,6 +439,7 @@ Response: 200
 ```
 
 ### Get Address Details
+
 ```
 GET /addresses/:id
 Authorization: Bearer <token>
@@ -432,6 +452,7 @@ Response: 200
 ```
 
 ### Create Address
+
 ```
 POST /addresses
 Authorization: Bearer <token>
@@ -455,6 +476,7 @@ Response: 201
 ```
 
 ### Update Address
+
 ```
 PUT /addresses/:id
 Authorization: Bearer <token>
@@ -476,6 +498,7 @@ Response: 200
 ```
 
 ### Delete Address
+
 ```
 DELETE /addresses/:id
 Authorization: Bearer <token>
@@ -494,6 +517,7 @@ Response: 200
 ## Support Ticket Endpoints
 
 ### List Support Tickets
+
 ```
 GET /support?page=1&limit=10
 Authorization: Bearer <token>
@@ -526,6 +550,7 @@ Response: 200
 ```
 
 ### Get Ticket Details
+
 ```
 GET /support/:id
 Authorization: Bearer <token>
@@ -538,6 +563,7 @@ Response: 200
 ```
 
 ### Create Support Ticket
+
 ```
 POST /support
 Authorization: Bearer <token>
@@ -556,6 +582,7 @@ Response: 201
 ```
 
 ### Add Message to Ticket
+
 ```
 POST /support/:id/messages
 Authorization: Bearer <token>
@@ -579,6 +606,7 @@ Response: 201
 ```
 
 ### Update Ticket Status (Admin)
+
 ```
 PUT /support/:id/status
 Authorization: Bearer <token>
@@ -616,37 +644,41 @@ All error responses follow this format:
 
 ### Common Error Codes
 
-| Status | Code | Message |
-|--------|------|---------|
-| 400 | VALIDATION_ERROR | Request validation failed |
-| 401 | AUTHENTICATION_ERROR | Missing or invalid token |
-| 403 | AUTHORIZATION_ERROR | Insufficient permissions |
-| 404 | NOT_FOUND | Resource not found |
-| 409 | CONFLICT | Resource already exists |
-| 500 | INTERNAL_ERROR | Server error |
+| Status | Code                 | Message                   |
+| ------ | -------------------- | ------------------------- |
+| 400    | VALIDATION_ERROR     | Request validation failed |
+| 401    | AUTHENTICATION_ERROR | Missing or invalid token  |
+| 403    | AUTHORIZATION_ERROR  | Insufficient permissions  |
+| 404    | NOT_FOUND            | Resource not found        |
+| 409    | CONFLICT             | Resource already exists   |
+| 500    | INTERNAL_ERROR       | Server error              |
 
 ---
 
 ## Role-Based Access
 
 ### Public Access
+
 - `GET /products`
 - `GET /products/:id`
 - `GET /categories`
 - `GET /categories/:slug`
 
 ### BUYER Access
+
 - All public endpoints
 - `GET /addresses`, `POST /addresses`, `PUT /addresses/:id`, `DELETE /addresses/:id`
 - `GET /orders`, `GET /orders/:id`, `POST /orders`
 - `GET /support`, `POST /support`, `POST /support/:id/messages`, `GET /support/:id`
 
 ### SELLER Access
+
 - All buyer endpoints
 - `POST /products`, `PUT /products/:id`, `DELETE /products/:id`
 - `PUT /orders/:id/status` (update order status)
 
 ### ADMIN Access
+
 - All endpoints
 
 ---
@@ -655,23 +687,23 @@ All error responses follow this format:
 
 ```javascript
 // Login
-const loginResponse = await fetch('http://localhost:3001/api/auth/login', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
+const loginResponse = await fetch("http://localhost:3001/api/auth/login", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
   body: JSON.stringify({
-    email: 'user@example.com',
-    password: 'password123'
-  })
+    email: "user@example.com",
+    password: "password123",
+  }),
 });
 
 const { data } = await loginResponse.json();
 const token = data.accessToken;
 
 // Fetch protected resource
-const ordersResponse = await fetch('http://localhost:3001/api/orders', {
+const ordersResponse = await fetch("http://localhost:3001/api/orders", {
   headers: {
-    'Authorization': `Bearer ${token}`
-  }
+    Authorization: `Bearer ${token}`,
+  },
 });
 
 const ordersData = await ordersResponse.json();
@@ -683,6 +715,7 @@ console.log(ordersData.data); // Array of orders
 ## Rate Limiting
 
 Currently no rate limiting. Production deployment should implement:
+
 - 100 requests/minute per IP
 - 1000 requests/minute per authenticated user
 
@@ -691,6 +724,7 @@ Currently no rate limiting. Production deployment should implement:
 ## CORS
 
 CORS is enabled for:
+
 ```
 http://localhost:5173  (Development)
 ```
@@ -703,17 +737,18 @@ Update `CORS_ORIGIN` environment variable for production deployment.
 
 Test users created by seed script:
 
-| Email | Password | Role |
-|-------|----------|------|
-| buyer@example.com | TestBuyer123 | BUYER |
+| Email              | Password      | Role   |
+| ------------------ | ------------- | ------ |
+| buyer@example.com  | TestBuyer123  | BUYER  |
 | seller@example.com | TestSeller123 | SELLER |
-| admin@example.com | TestAdmin123 | ADMIN |
+| admin@example.com  | TestAdmin123  | ADMIN  |
 
 ---
 
 ## Changelog
 
 ### v1.0.0 (Initial Release)
+
 - Authentication (register, login, logout)
 - Products CRUD
 - Categories

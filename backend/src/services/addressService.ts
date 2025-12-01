@@ -24,7 +24,7 @@ interface UpdateAddressInput {
 
 export async function createAddress(
   userId: string,
-  input: CreateAddressInput
+  input: CreateAddressInput,
 ): Promise<AddressResponse> {
   // If this is default, unset other defaults
   if (input.isDefault) {
@@ -46,7 +46,7 @@ export async function createAddress(
 
 export async function getAddress(
   addressId: string,
-  userId: string
+  userId: string,
 ): Promise<AddressResponse> {
   const address = await prisma.address.findUnique({
     where: { id: addressId },
@@ -63,7 +63,9 @@ export async function getAddress(
   return formatAddress(address);
 }
 
-export async function getUserAddresses(userId: string): Promise<AddressResponse[]> {
+export async function getUserAddresses(
+  userId: string,
+): Promise<AddressResponse[]> {
   const addresses = await prisma.address.findMany({
     where: { userId },
     orderBy: { createdAt: "desc" },
@@ -75,7 +77,7 @@ export async function getUserAddresses(userId: string): Promise<AddressResponse[
 export async function updateAddress(
   addressId: string,
   userId: string,
-  input: UpdateAddressInput
+  input: UpdateAddressInput,
 ): Promise<AddressResponse> {
   const address = await prisma.address.findUnique({
     where: { id: addressId },
@@ -107,7 +109,7 @@ export async function updateAddress(
 
 export async function deleteAddress(
   addressId: string,
-  userId: string
+  userId: string,
 ): Promise<void> {
   const address = await prisma.address.findUnique({
     where: { id: addressId },
@@ -128,7 +130,7 @@ export async function deleteAddress(
 
   if (orderCount > 0) {
     throw new AuthorizationError(
-      "Cannot delete address that is used in orders"
+      "Cannot delete address that is used in orders",
     );
   }
 

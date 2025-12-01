@@ -21,7 +21,7 @@ app.use(
   cors({
     origin: CORS_ORIGIN,
     credentials: true,
-  })
+  }),
 );
 
 // Health check endpoint
@@ -33,7 +33,7 @@ app.get(
       data: { message: "Server is running" },
     };
     res.json(response);
-  })
+  }),
 );
 
 // API Routes

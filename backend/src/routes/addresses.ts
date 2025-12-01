@@ -2,10 +2,7 @@ import { Router } from "express";
 import { asyncHandler } from "@/middleware/errorHandler.js";
 import { authMiddleware } from "@/middleware/auth.js";
 import { validateBody } from "@/middleware/validation.js";
-import {
-  CreateAddressSchema,
-  UpdateAddressSchema,
-} from "@/schemas/index.js";
+import { CreateAddressSchema, UpdateAddressSchema } from "@/schemas/index.js";
 import {
   createAddress,
   getAddress,
@@ -37,7 +34,7 @@ router.get(
       data: addresses,
     };
     res.json(response);
-  })
+  }),
 );
 
 // GET /api/addresses/:id
@@ -58,7 +55,7 @@ router.get(
       data: address,
     };
     res.json(response);
-  })
+  }),
 );
 
 // POST /api/addresses
@@ -80,7 +77,7 @@ router.post(
       data: address,
     };
     res.status(201).json(response);
-  })
+  }),
 );
 
 // PUT /api/addresses/:id
@@ -102,7 +99,7 @@ router.put(
       data: address,
     };
     res.json(response);
-  })
+  }),
 );
 
 // DELETE /api/addresses/:id
@@ -123,7 +120,7 @@ router.delete(
       data: { message: "Address deleted successfully" },
     };
     res.json(response);
-  })
+  }),
 );
 
 export default router;

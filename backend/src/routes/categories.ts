@@ -26,7 +26,7 @@ router.get(
       data: categories,
     };
     res.json(response);
-  })
+  }),
 );
 
 // GET /api/categories/:slug
@@ -39,7 +39,7 @@ router.get(
       data: category,
     };
     res.json(response);
-  })
+  }),
 );
 
 // POST /api/categories (admin only)
@@ -55,7 +55,7 @@ router.post(
       data: category,
     };
     res.status(201).json(response);
-  })
+  }),
 );
 
 // PUT /api/categories/:id (admin only)
@@ -71,7 +71,7 @@ router.put(
       data: category,
     };
     res.json(response);
-  })
+  }),
 );
 
 // DELETE /api/categories/:id (admin only)
@@ -86,7 +86,7 @@ router.delete(
       data: { message: "Category deleted successfully" },
     };
     res.json(response);
-  })
+  }),
 );
 
 export default router;

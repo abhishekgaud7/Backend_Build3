@@ -123,6 +123,7 @@ pnpm start
 ### Authentication
 
 #### Register
+
 ```http
 POST /api/auth/register
 Content-Type: application/json
@@ -138,6 +139,7 @@ Content-Type: application/json
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -156,6 +158,7 @@ Content-Type: application/json
 ```
 
 #### Login
+
 ```http
 POST /api/auth/login
 Content-Type: application/json
@@ -167,6 +170,7 @@ Content-Type: application/json
 ```
 
 #### Get Current User
+
 ```http
 GET /api/auth/me
 Authorization: Bearer <token>
@@ -175,16 +179,19 @@ Authorization: Bearer <token>
 ### Products
 
 #### List Products (Public)
+
 ```http
 GET /api/products?search=cement&categorySlug=cement&page=1&limit=10
 ```
 
 #### Get Product Details
+
 ```http
 GET /api/products/:id
 ```
 
 #### Create Product (Seller/Admin)
+
 ```http
 POST /api/products
 Authorization: Bearer <token>
@@ -201,12 +208,14 @@ Content-Type: application/json
 ```
 
 #### Update Product (Seller/Admin)
+
 ```http
 PUT /api/products/:id
 Authorization: Bearer <token>
 ```
 
 #### Delete Product (Seller/Admin)
+
 ```http
 DELETE /api/products/:id
 Authorization: Bearer <token>
@@ -215,16 +224,19 @@ Authorization: Bearer <token>
 ### Categories
 
 #### List Categories
+
 ```http
 GET /api/categories
 ```
 
 #### Get Category by Slug
+
 ```http
 GET /api/categories/:slug
 ```
 
 #### Create Category (Admin)
+
 ```http
 POST /api/categories
 Authorization: Bearer <token>
@@ -233,18 +245,21 @@ Authorization: Bearer <token>
 ### Orders
 
 #### List User Orders
+
 ```http
 GET /api/orders
 Authorization: Bearer <token>
 ```
 
 #### Get Order Details
+
 ```http
 GET /api/orders/:id
 Authorization: Bearer <token>
 ```
 
 #### Create Order
+
 ```http
 POST /api/orders
 Authorization: Bearer <token>
@@ -262,6 +277,7 @@ Content-Type: application/json
 ```
 
 #### Update Order Status (Admin/Seller)
+
 ```http
 PUT /api/orders/:id/status
 Authorization: Bearer <token>
@@ -275,12 +291,14 @@ Content-Type: application/json
 ### Addresses
 
 #### List User Addresses
+
 ```http
 GET /api/addresses
 Authorization: Bearer <token>
 ```
 
 #### Create Address
+
 ```http
 POST /api/addresses
 Authorization: Bearer <token>
@@ -298,12 +316,14 @@ Content-Type: application/json
 ```
 
 #### Update Address
+
 ```http
 PUT /api/addresses/:id
 Authorization: Bearer <token>
 ```
 
 #### Delete Address
+
 ```http
 DELETE /api/addresses/:id
 Authorization: Bearer <token>
@@ -312,18 +332,21 @@ Authorization: Bearer <token>
 ### Support Tickets
 
 #### List Support Tickets
+
 ```http
 GET /api/support
 Authorization: Bearer <token>
 ```
 
 #### Get Ticket Details
+
 ```http
 GET /api/support/:id
 Authorization: Bearer <token>
 ```
 
 #### Create Support Ticket
+
 ```http
 POST /api/support
 Authorization: Bearer <token>
@@ -336,6 +359,7 @@ Content-Type: application/json
 ```
 
 #### Add Message to Ticket
+
 ```http
 POST /api/support/:id/messages
 Authorization: Bearer <token>
@@ -347,6 +371,7 @@ Content-Type: application/json
 ```
 
 #### Update Ticket Status (Admin)
+
 ```http
 PUT /api/support/:id/status
 Authorization: Bearer <token>
