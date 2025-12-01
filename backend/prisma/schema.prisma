@@ -1,0 +1,181 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String     @id @default(cuid())
+  email         String     @unique
+  name          String
+  phone         String?
+  passwordHash  String
+  role          UserRole   @default(BUYER)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  // Relations
+  products      Product[]
+  orders        Order[]
+  addresses     Address[]
+  supportTickets SupportTicket[]
+
+  @@map("users")
+}
+
+enum UserRole {
+  BUYER
+  SELLER
+  ADMIN
+}
+
+model Category {
+  id            String     @id @default(cuid())
+  name          String
+  slug          String     @unique
+  description   String?
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  // Relations
+  products      Product[]
+
+  @@map("categories")
+}
+
+model Product {
+  id            String     @id @default(cuid())
+  name          String
+  slug          String     @unique
+  description   String
+  price         Decimal    @db.Decimal(10, 2)
+  unit          String     // e.g., "bag", "ton", "piece"
+  categoryId    String
+  category      Category   @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  sellerId      String
+  seller        User       @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  stockQuantity Int        @default(0)
+  isActive      Boolean    @default(true)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  // Relations
+  orderItems    OrderItem[]
+
+  @@index([categoryId])
+  @@index([sellerId])
+  @@map("products")
+}
+
+model Order {
+  id            String     @id @default(cuid())
+  userId        String
+  user          User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status        OrderStatus @default(PENDING)
+  subtotal      Decimal    @db.Decimal(10, 2)
+  tax           Decimal    @db.Decimal(10, 2) @default(0)
+  deliveryFee   Decimal    @db.Decimal(10, 2) @default(0)
+  total         Decimal    @db.Decimal(10, 2)
+  addressId     String
+  address       Address    @relation(fields: [addressId], references: [id], onDelete: Restrict)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  // Relations
+  items         OrderItem[]
+
+  @@index([userId])
+  @@index([addressId])
+  @@map("orders")
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+model OrderItem {
+  id            String     @id @default(cuid())
+  orderId       String
+  order         Order      @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId     String
+  product       Product    @relation(fields: [productId], references: [id], onDelete: Restrict)
+  quantity      Int
+  unitPrice     Decimal    @db.Decimal(10, 2)
+  lineTotal     Decimal    @db.Decimal(10, 2)
+
+  @@index([orderId])
+  @@index([productId])
+  @@map("order_items")
+}
+
+model Address {
+  id            String     @id @default(cuid())
+  userId        String
+  user          User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  label         String     // e.g., "Home", "Site 1"
+  line1         String
+  line2         String?
+  city          String
+  state         String
+  pincode       String
+  isDefault     Boolean    @default(false)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  // Relations
+  orders        Order[]
+
+  @@index([userId])
+  @@map("addresses")
+}
+
+model SupportTicket {
+  id            String     @id @default(cuid())
+  userId        String
+  user          User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subject       String
+  description   String
+  status        TicketStatus @default(OPEN)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  // Relations
+  messages      SupportMessage[]
+
+  @@index([userId])
+  @@map("support_tickets")
+}
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+model SupportMessage {
+  id            String     @id @default(cuid())
+  ticketId      String
+  ticket        SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  senderType    SenderType
+  message       String
+  createdAt     DateTime   @default(now())
+
+  @@index([ticketId])
+  @@map("support_messages")
+}
+
+enum SenderType {
+  USER
+  ADMIN
+}
