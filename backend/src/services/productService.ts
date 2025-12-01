@@ -164,7 +164,7 @@ export async function getSellerProducts(
   const skip = (page - 1) * limit;
 
   const [products, total] = await Promise.all([
-    prisma.product.find({
+    prisma.product.findMany({
       where: { sellerId },
       skip,
       take: limit,
