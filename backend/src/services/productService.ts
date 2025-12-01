@@ -141,7 +141,7 @@ export async function getProducts(
   }
 
   const [products, total] = await Promise.all([
-    prisma.product.find({
+    prisma.product.findMany({
       where,
       skip,
       take: limit,
