@@ -2,17 +2,8 @@ import { Router } from "express";
 import { asyncHandler } from "@/middleware/errorHandler.js";
 import { authMiddleware } from "@/middleware/auth.js";
 import { validateBody } from "@/middleware/validation.js";
-import {
-  RegisterRequestSchema,
-  LoginSchema,
-  UpdateProfileSchema,
-} from "@/schemas/index.js";
-import {
-  registerUser,
-  loginUser,
-  getCurrentUser,
-  updateUserProfile,
-} from "@/services/authService.js";
+import { RegisterRequestSchema, LoginSchema } from "@/schemas/index.js";
+import { registerUser, loginUser, getCurrentUser } from "@/services/authService.js";
 import type { AuthenticatedRequest } from "@/types/index.js";
 import type { Response } from "express";
 import type { ApiResponse } from "@/types/index.js";
@@ -23,13 +14,13 @@ const router = Router();
 router.post(
   "/register",
   validateBody(RegisterRequestSchema),
-  asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
-    const result = await registerUser(req.body);
+  asyncHandler(async (_req: AuthenticatedRequest, res: Response) => {
+    const result = await registerUser(_req.body);
     const response: ApiResponse = {
       success: true,
       data: result,
     };
-    res.status(201).json(response);
+    return res.status(201).json(response);
   }),
 );
 
@@ -37,25 +28,25 @@ router.post(
 router.post(
   "/login",
   validateBody(LoginSchema),
-  asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
-    const result = await loginUser(req.body);
+  asyncHandler(async (_req: AuthenticatedRequest, res: Response) => {
+    const result = await loginUser(_req.body);
     const response: ApiResponse = {
       success: true,
       data: result,
     };
-    res.json(response);
+    return res.json(response);
   }),
 );
 
 // POST /api/auth/logout
 router.post(
   "/logout",
-  asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
+  asyncHandler(async (_req: AuthenticatedRequest, res: Response) => {
     const response: ApiResponse = {
       success: true,
       data: { message: "Logged out successfully" },
     };
-    res.json(response);
+    return res.json(response);
   }),
 );
 
@@ -76,7 +67,7 @@ router.get(
       success: true,
       data: user,
     };
-    res.json(response);
+    return res.json(response);
   }),
 );
 

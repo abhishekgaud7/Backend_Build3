@@ -562,3 +562,16 @@ MIT
 ## Support
 
 For issues or questions about the backend API, please create an issue in the repository.
+## Supabase Integration
+
+Environment variables:
+
+- `DATABASE_URL`: Supabase Postgres connection string
+- `SUPABASE_URL`: Supabase project URL
+- `SUPABASE_ANON_KEY`: Supabase anon key (frontend usage)
+- `SUPABASE_SERVICE_ROLE_KEY`: Supabase service role key (server-side JWT validation)
+
+Auth flow:
+
+- Registration and login use Supabase (`authService.ts`)
+- Backend validates Bearer tokens via Supabase (`middleware/auth.ts`)

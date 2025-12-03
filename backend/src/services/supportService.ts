@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma.js";
+import { $Enums } from "@prisma/client";
 import { NotFoundError, AuthorizationError } from "@/utils/errors.js";
 import type {
   SupportTicketResponse,
@@ -100,7 +101,7 @@ export async function getAllTickets(
 
 export async function updateTicketStatus(
   ticketId: string,
-  newStatus: string,
+  newStatus: $Enums.TicketStatus,
   role: string,
 ): Promise<SupportTicketResponse> {
   if (role !== "ADMIN") {

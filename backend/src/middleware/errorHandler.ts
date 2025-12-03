@@ -1,13 +1,13 @@
 import type { Request, Response, NextFunction } from "express";
 import { ZodError } from "zod";
-import { AppError, ValidationError } from "@/utils/errors.js";
+import { AppError } from "@/utils/errors.js";
 import type { ApiResponse } from "@/types/index.js";
 
 export function errorHandler(
   err: Error | AppError | ZodError,
-  req: Request,
+  _req: Request,
   res: Response,
-  next: NextFunction,
+  _next: NextFunction,
 ): void {
   console.error("Error:", err);
 
@@ -43,7 +43,7 @@ export function errorHandler(
 }
 
 export function asyncHandler(
-  fn: (req: Request, res: Response, next: NextFunction) => Promise<void>,
+  fn: (req: Request, res: Response, next: NextFunction) => Promise<unknown>,
 ) {
   return (req: Request, res: Response, next: NextFunction) => {
     Promise.resolve(fn(req, res, next)).catch(next);

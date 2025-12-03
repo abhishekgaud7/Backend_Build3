@@ -1,5 +1,4 @@
 import { PrismaClient } from "@prisma/client";
-import bcrypt from "bcrypt";
 
 const prisma = new PrismaClient();
 
@@ -16,18 +15,12 @@ async function main() {
   await prisma.category.deleteMany();
   await prisma.user.deleteMany();
 
-  // Create test users
-  const buyerPassword = await bcrypt.hash("TestBuyer123", 10);
-  const sellerPassword = await bcrypt.hash("TestSeller123", 10);
-  const adminPassword = await bcrypt.hash("TestAdmin123", 10);
-
   const buyer = await prisma.user.create({
     data: {
       name: "Test Buyer",
       email: "buyer@example.com",
       phone: "9876543210",
       role: "BUYER",
-      passwordHash: buyerPassword,
     },
   });
 
@@ -37,7 +30,6 @@ async function main() {
       email: "seller@example.com",
       phone: "9876543211",
       role: "SELLER",
-      passwordHash: sellerPassword,
     },
   });
 
@@ -47,14 +39,13 @@ async function main() {
       email: "admin@example.com",
       phone: "9876543212",
       role: "ADMIN",
-      passwordHash: adminPassword,
     },
   });
 
-  console.log("✅ Created test users:");
-  console.log(`   Buyer: buyer@example.com (password: TestBuyer123)`);
-  console.log(`   Seller: seller@example.com (password: TestSeller123)`);
-  console.log(`   Admin: admin@example.com (password: TestAdmin123)`);
+  console.log("✅ Created test users (use Supabase auth to sign in):");
+  console.log(`   Buyer: buyer@example.com`);
+  console.log(`   Seller: seller@example.com`);
+  console.log(`   Admin: admin@example.com`);
 
   // Create categories
   const categories = await Promise.all([

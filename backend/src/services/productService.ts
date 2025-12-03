@@ -1,7 +1,6 @@
 import { prisma } from "@/lib/prisma.js";
 import { NotFoundError, AuthorizationError } from "@/utils/errors.js";
 import type { ProductResponse } from "@/types/index.js";
-import type { Decimal } from "@prisma/client/runtime/library";
 
 interface CreateProductInput {
   name: string;

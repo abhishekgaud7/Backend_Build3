@@ -16,7 +16,7 @@ export const RegisterRequestSchema = RegisterSchema.refine(
     message: "Passwords do not match",
     path: ["confirmPassword"],
   },
-).omit({ confirmPassword: true });
+).transform(({ confirmPassword, ...rest }) => rest);
 
 export const LoginSchema = z.object({
   email: z.string().email("Invalid email format"),

@@ -19,7 +19,7 @@ const router = Router();
 // GET /api/categories
 router.get(
   "/",
-  asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
+  asyncHandler(async (_req: AuthenticatedRequest, res: Response) => {
     const categories = await getCategories();
     const response: ApiResponse = {
       success: true,

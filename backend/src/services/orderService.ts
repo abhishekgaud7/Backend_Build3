@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma.js";
+import { $Enums } from "@prisma/client";
 import {
   NotFoundError,
   AuthorizationError,
@@ -58,13 +59,13 @@ export async function createOrder(
       throw new ValidationError(`Product ${item.productId} not found`);
     }
 
-    const lineTotal = product.price * item.quantity;
+    const lineTotal = Number(product.price) * item.quantity;
     subtotal += lineTotal;
 
     orderItems.push({
       productId: item.productId,
       quantity: item.quantity,
-      unitPrice: product.price,
+      unitPrice: Number(product.price),
       lineTotal,
     });
   }
@@ -76,7 +77,7 @@ export async function createOrder(
   const order = await prisma.order.create({
     data: {
       userId,
-      addressId,
+      addressId: input.addressId,
       subtotal,
       tax,
       deliveryFee: DELIVERY_FEE,
@@ -163,7 +164,7 @@ export async function getAllOrders(
 
 export async function updateOrderStatus(
   orderId: string,
-  newStatus: string,
+  newStatus: $Enums.OrderStatus,
   role: string,
 ): Promise<OrderResponse> {
   const order = await prisma.order.findUnique({

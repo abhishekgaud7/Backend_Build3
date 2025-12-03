@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+import jwt, { type Secret } from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import type { JWTPayload } from "@/types/index.js";
 
@@ -21,17 +21,9 @@ export function generateToken(
   email: string,
   role: string,
 ): string {
-  return jwt.sign(
-    {
-      userId,
-      email,
-      role,
-    },
-    JWT_SECRET,
-    {
-      expiresIn: JWT_EXPIRY,
-    },
-  );
+  const payload = { userId, email, role };
+  const secret: Secret = JWT_SECRET;
+  return jwt.sign(payload, secret, { expiresIn: JWT_EXPIRY } as any);
 }
 
 export function verifyToken(token: string): JWTPayload | null {

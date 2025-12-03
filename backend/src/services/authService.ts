@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma.js";
-import { hashPassword, verifyPassword, generateToken } from "@/utils/auth.js";
+import { supabase } from "@/lib/supabase.js";
 import {
   AuthenticationError,
   ConflictError,
@@ -28,65 +28,54 @@ interface AuthResponse {
 export async function registerUser(
   input: RegisterInput,
 ): Promise<AuthResponse> {
-  // Check if user already exists
-  const existingUser = await prisma.user.findUnique({
-    where: { email: input.email },
+  const { data, error } = await supabase.auth.signUp({
+    email: input.email,
+    password: input.password,
   });
 
-  if (existingUser) {
-    throw new ConflictError("Email already registered");
+  if (error) {
+    if (error.message.includes("already registered") || error.status === 400) {
+      throw new ConflictError("Email already registered");
+    }
+    throw new AuthenticationError(error.message);
   }
 
-  // Hash password
-  const passwordHash = await hashPassword(input.password);
+  const supabaseUser = data.user;
+  if (!supabaseUser) {
+    throw new AuthenticationError("Registration failed");
+  }
 
-  // Create user
   const user = await prisma.user.create({
     data: {
+      id: supabaseUser.id,
       name: input.name,
       email: input.email,
       phone: input.phone,
       role: input.role,
-      passwordHash,
     },
   });
 
-  // Generate token
-  const accessToken = generateToken(user.id, user.email, user.role);
+  const accessToken = data.session?.access_token ?? "";
 
-  return {
-    user: formatUserProfile(user),
-    accessToken,
-  };
+  return { user: formatUserProfile(user), accessToken };
 }
 
 export async function loginUser(input: LoginInput): Promise<AuthResponse> {
-  // Find user by email
-  const user = await prisma.user.findUnique({
-    where: { email: input.email },
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email: input.email,
+    password: input.password,
   });
 
+  if (error || !data.session) {
+    throw new AuthenticationError("Invalid email or password");
+  }
+
+  const user = await prisma.user.findUnique({ where: { email: input.email } });
   if (!user) {
-    throw new AuthenticationError("Invalid email or password");
+    throw new NotFoundError("User");
   }
 
-  // Verify password
-  const isPasswordValid = await verifyPassword(
-    input.password,
-    user.passwordHash,
-  );
-
-  if (!isPasswordValid) {
-    throw new AuthenticationError("Invalid email or password");
-  }
-
-  // Generate token
-  const accessToken = generateToken(user.id, user.email, user.role);
-
-  return {
-    user: formatUserProfile(user),
-    accessToken,
-  };
+  return { user: formatUserProfile(user), accessToken: data.session.access_token };
 }
 
 export async function getCurrentUser(userId: string): Promise<UserProfile> {

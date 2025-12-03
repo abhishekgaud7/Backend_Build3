@@ -53,7 +53,7 @@ router.get(
         totalPages: Math.ceil(result.total / limit),
       },
     };
-    res.json(response);
+    return res.json(response);
   }),
 );
 
@@ -74,7 +74,7 @@ router.get(
       success: true,
       data: order,
     };
-    res.json(response);
+    return res.json(response);
   }),
 );
 
@@ -106,7 +106,7 @@ router.post(
       success: true,
       data: order,
     };
-    res.status(201).json(response);
+    return res.status(201).json(response);
   }),
 );
 
@@ -133,7 +133,7 @@ router.put(
       success: true,
       data: order,
     };
-    res.json(response);
+    return res.json(response);
   }),
 );
 

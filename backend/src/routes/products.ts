@@ -13,7 +13,6 @@ import {
   deleteProduct,
   getProduct,
   getProducts,
-  getSellerProducts,
 } from "@/services/productService.js";
 import type { AuthenticatedRequest } from "@/types/index.js";
 import type { Response } from "express";
@@ -48,7 +47,7 @@ router.get(
         totalPages: Math.ceil(total / limit),
       },
     };
-    res.json(response);
+    return res.json(response);
   }),
 );
 
@@ -61,7 +60,7 @@ router.get(
       success: true,
       data: product,
     };
-    res.json(response);
+    return res.json(response);
   }),
 );
 
@@ -84,7 +83,7 @@ router.post(
       success: true,
       data: product,
     };
-    res.status(201).json(response);
+    return res.status(201).json(response);
   }),
 );
 
@@ -112,7 +111,7 @@ router.put(
       success: true,
       data: product,
     };
-    res.json(response);
+    return res.json(response);
   }),
 );
 
@@ -134,7 +133,7 @@ router.delete(
       success: true,
       data: { message: "Product deleted successfully" },
     };
-    res.json(response);
+    return res.json(response);
   }),
 );
 

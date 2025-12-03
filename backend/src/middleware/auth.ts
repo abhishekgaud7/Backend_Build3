@@ -1,11 +1,13 @@
-import type { Request, Response, NextFunction } from "express";
-import { verifyToken, extractTokenFromHeader } from "@/utils/auth.js";
+import type { Response, NextFunction } from "express";
+import { extractTokenFromHeader } from "@/utils/auth.js";
+import { supabase } from "@/lib/supabase.js";
+import { prisma } from "@/lib/prisma.js";
 import { AuthenticationError } from "@/utils/errors.js";
 import type { AuthenticatedRequest } from "@/types/index.js";
 
 export function authMiddleware(
   req: AuthenticatedRequest,
-  res: Response,
+  _res: Response,
   next: NextFunction,
 ): void {
   try {
@@ -14,15 +16,20 @@ export function authMiddleware(
       throw new AuthenticationError("No authorization token provided");
     }
 
-    const payload = verifyToken(token);
-    if (!payload) {
+    const { data, error } = await supabase.auth.getUser(token);
+    if (error || !data.user) {
       throw new AuthenticationError("Invalid or expired token");
     }
 
+    const dbUser = await prisma.user.findUnique({ where: { email: data.user.email! } });
+    if (!dbUser) {
+      throw new AuthenticationError("User profile not found");
+    }
+
     req.user = {
-      id: payload.userId,
-      email: payload.email,
-      role: payload.role as "BUYER" | "SELLER" | "ADMIN",
+      id: dbUser.id,
+      email: dbUser.email,
+      role: dbUser.role as "BUYER" | "SELLER" | "ADMIN",
     };
 
     next();
@@ -37,7 +44,7 @@ export function authMiddleware(
 export function requireRole(...roles: string[]) {
   return (
     req: AuthenticatedRequest,
-    res: Response,
+    _res: Response,
     next: NextFunction,
   ): void => {
     if (!req.user) {

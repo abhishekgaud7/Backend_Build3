@@ -27,7 +27,7 @@ app.use(
 // Health check endpoint
 app.get(
   "/api/health",
-  asyncHandler(async (req, res: Response) => {
+  asyncHandler(async (_req, res: Response) => {
     const response: ApiResponse = {
       success: true,
       data: { message: "Server is running" },
@@ -45,7 +45,7 @@ app.use("/api/addresses", addressRoutes);
 app.use("/api/support", supportRoutes);
 
 // 404 handler
-app.use((req, res) => {
+app.use((_req, res) => {
   res.status(404).json({
     success: false,
     error: {

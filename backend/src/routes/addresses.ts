@@ -33,7 +33,7 @@ router.get(
       success: true,
       data: addresses,
     };
-    res.json(response);
+    return res.json(response);
   }),
 );
 
@@ -54,7 +54,7 @@ router.get(
       success: true,
       data: address,
     };
-    res.json(response);
+    return res.json(response);
   }),
 );
 
@@ -76,7 +76,7 @@ router.post(
       success: true,
       data: address,
     };
-    res.status(201).json(response);
+    return res.status(201).json(response);
   }),
 );
 
@@ -98,7 +98,7 @@ router.put(
       success: true,
       data: address,
     };
-    res.json(response);
+    return res.json(response);
   }),
 );
 
@@ -119,7 +119,7 @@ router.delete(
       success: true,
       data: { message: "Address deleted successfully" },
     };
-    res.json(response);
+    return res.json(response);
   }),
 );
 
