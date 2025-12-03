@@ -19,3 +19,9 @@
   from = "/api"
   status = 200
   to = "/.netlify/functions/api"
+
+[[redirects]]
+  force = true
+  from = "/hello"
+  status = 200
+  to = "/.netlify/functions/hello"
