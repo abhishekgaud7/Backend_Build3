@@ -36,6 +36,20 @@ app.get(
   }),
 );
 
+// Root info endpoints
+app.get(
+  "/",
+  asyncHandler(async (_req, res: Response) => {
+    res.json({ message: "BUILD-SETU API", base: "/api", health: "/api/health" });
+  }),
+);
+app.get(
+  "/api",
+  asyncHandler(async (_req, res: Response) => {
+    res.json({ ok: true, health: "/api/health" });
+  }),
+);
+
 // API Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
