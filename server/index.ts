@@ -23,12 +23,6 @@ export function createServer() {
   app.get("/api/health", (_req, res) => {
     res.json({ success: true, data: { message: "Serverless is running" } });
   });
-  app.get("/", (_req, res) => {
-    res.json({ message: "BUILD-SETU Serverless API", base: "/api", health: "/api/health" });
-  });
-  app.get("/api", (_req, res) => {
-    res.json({ ok: true, health: "/api/health" });
-  });
 
   return app;
 }

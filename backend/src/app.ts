@@ -34,18 +34,7 @@ export function createApp() {
     }),
   );
 
-  app.get(
-    "/",
-    asyncHandler(async (_req, res: Response) => {
-      res.json({ message: "BUILD-SETU API", base: "/api", health: "/api/health" });
-    }),
-  );
-  app.get(
-    "/api",
-    asyncHandler(async (_req, res: Response) => {
-      res.json({ ok: true, health: "/api/health" });
-    }),
-  );
+  // Root is left to hosting layer (SPA or static), API lives under /api
 
   app.use("/api/auth", authRoutes);
   app.use("/api/products", productRoutes);
@@ -65,4 +54,3 @@ export function createApp() {
 
   return app;
 }
-
