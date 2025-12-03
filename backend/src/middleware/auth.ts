@@ -5,11 +5,11 @@ import { prisma } from "@/lib/prisma.js";
 import { AuthenticationError } from "@/utils/errors.js";
 import type { AuthenticatedRequest } from "@/types/index.js";
 
-export function authMiddleware(
+export async function authMiddleware(
   req: AuthenticatedRequest,
   _res: Response,
   next: NextFunction,
-): void {
+): Promise<void> {
   try {
     const token = extractTokenFromHeader(req.headers.authorization);
     if (!token) {
@@ -21,7 +21,9 @@ export function authMiddleware(
       throw new AuthenticationError("Invalid or expired token");
     }
 
-    const dbUser = await prisma.user.findUnique({ where: { email: data.user.email! } });
+    const dbUser = await prisma.user.findUnique({
+      where: { email: data.user.email! },
+    });
     if (!dbUser) {
       throw new AuthenticationError("User profile not found");
     }
@@ -31,13 +33,13 @@ export function authMiddleware(
       email: dbUser.email,
       role: dbUser.role as "BUYER" | "SELLER" | "ADMIN",
     };
-
     next();
-  } catch (error) {
-    if (error instanceof AuthenticationError) {
-      throw error;
-    }
-    throw new AuthenticationError("Authentication failed");
+  } catch (err) {
+    return next(
+      err instanceof AuthenticationError
+        ? err
+        : new AuthenticationError("Authentication failed"),
+    );
   }
 }
 
